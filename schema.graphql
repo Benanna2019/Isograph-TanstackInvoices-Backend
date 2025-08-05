@@ -1,0 +1,189 @@
+type Query {
+  firstDataInfo: FirstDataInfo!
+  customers: [CustomerListItem!]!
+  customer(id: ID!): Customer
+  customerInfo(id: ID!): CustomerInfo
+  customerDetails(id: ID!): CustomerDetails
+  searchCustomers(query: String!): [CustomerListItem!]!
+  firstCustomer: Customer
+  invoices: [InvoiceListItem!]!
+  invoice(id: ID!): Invoice
+  invoiceDetails(id: ID!): InvoiceDetails
+  invoiceSummary: InvoiceSummary!
+  firstInvoice: Invoice
+  deposits: [DepositListItem!]!
+  deposit(id: ID!): Deposit
+}
+
+type FirstDataInfo {
+  firstInvoiceId: ID
+  firstCustomerId: ID
+}
+
+type Mutation {
+  _empty: String
+  createCustomer(input: CreateCustomerInput!): Customer!
+  createInvoice(input: CreateInvoiceInput!): Invoice!
+  createDeposit(input: CreateDepositInput!): Deposit!
+  deleteDeposit(id: ID!): Deposit!
+}
+
+type Customer {
+  id: ID!
+  email: String!
+  name: String!
+  createdAt: String!
+  updatedAt: String!
+  invoices: [Invoice!]!
+}
+
+type CustomerInfo {
+  name: String!
+  email: String!
+}
+
+type CustomerListItem {
+  id: ID!
+  email: String!
+  name: String!
+}
+
+type CustomerDetails {
+  name: String!
+  email: String!
+  invoiceDetails: [InvoiceDetail!]!
+}
+
+type InvoiceDetail {
+  id: ID!
+  number: Int!
+  totalAmount: Float!
+  totalDeposits: Float!
+  daysToDueDate: Int!
+  dueStatus: DueStatus!
+  dueStatusDisplay: String!
+}
+
+input CreateCustomerInput {
+  email: String!
+  name: String!
+}
+
+enum DueStatus {
+  paid
+  overpaid
+  overdue
+  due
+}
+
+type Invoice {
+  id: ID!
+  number: Int!
+  invoiceDate: String!
+  dueDate: String!
+  customerId: String!
+  customer: Customer!
+  lineItems: [LineItem!]!
+  deposits: [Deposit!]!
+  createdAt: String!
+  updatedAt: String!
+}
+
+type LineItem {
+  id: ID!
+  description: String!
+  quantity: Int!
+  unitPrice: Float!
+  invoiceId: String!
+}
+
+type InvoiceListItem {
+  id: ID!
+  name: String!
+  number: Int!
+  totalAmount: Float!
+  totalDeposits: Float!
+  daysToDueDate: Int!
+  dueStatus: DueStatus!
+  dueStatusDisplay: String!
+}
+
+type InvoiceSummary {
+  invoiceListItems: [InvoiceListItem!]!
+  dueSoonAmount: Float!
+  overdueAmount: Float!
+}
+
+type InvoiceDetails {
+  invoice: InvoiceWithRelations!
+  totalAmount: Float!
+  totalDeposits: Float!
+  daysToDueDate: Int!
+  dueStatus: DueStatus!
+  dueStatusDisplay: String!
+}
+
+type InvoiceWithRelations {
+  id: ID!
+  number: Int!
+  invoiceDate: String!
+  dueDate: String!
+  customer: CustomerRef!
+  lineItems: [LineItem!]!
+  deposits: [DepositRef!]!
+}
+
+type CustomerRef {
+  id: ID!
+  name: String!
+}
+
+type DepositRef {
+  id: ID!
+  amount: Float!
+  depositDate: String!
+}
+
+input CreateInvoiceInput {
+  dueDate: String!
+  customerId: String!
+  lineItems: [LineItemInput!]!
+}
+
+input LineItemInput {
+  description: String!
+  quantity: Int!
+  unitPrice: Float!
+}
+
+type Deposit {
+  id: ID!
+  amount: Float!
+  depositDate: String!
+  note: String!
+  invoiceId: String!
+  invoice: Invoice!
+  createdAt: String!
+  updatedAt: String!
+}
+
+type DepositListItem {
+  id: ID!
+  depositDate: String!
+  depositDateFormatted: String!
+  amount: Float!
+  invoice: InvoiceWithCustomer!
+}
+
+type InvoiceWithCustomer {
+  id: ID!
+  number: Int!
+  customer: CustomerRef!
+}
+
+input CreateDepositInput {
+  amount: Float!
+  depositDate: String!
+  note: String!
+  invoiceId: String!
+}
