@@ -6,6 +6,8 @@ type Query {
   customerDetails(id: ID!): CustomerDetails
   searchCustomers(query: String!): [CustomerListItem!]!
   firstCustomer: Customer
+  createInvoiceOptions: CreateInvoiceOptions!
+  node(id: ID!): Node
   invoices: [InvoiceListItem!]!
   invoice(id: ID!): Invoice
   invoiceDetails(id: ID!): InvoiceDetails
@@ -67,6 +69,15 @@ type InvoiceDetail {
 input CreateCustomerInput {
   email: String!
   name: String!
+}
+
+type CreateInvoiceOptions implements Node {
+  id: ID!
+  searchCustomers(query: String!): [CustomerListItem!]!
+}
+
+interface Node {
+  id: ID!
 }
 
 enum DueStatus {

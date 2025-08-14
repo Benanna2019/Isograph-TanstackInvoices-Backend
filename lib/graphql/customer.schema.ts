@@ -42,6 +42,15 @@ export const typeDefs = /* GraphQL */ `
     name: String!
   }
 
+  type CreateInvoiceOptions implements Node {
+    id: ID!
+    searchCustomers(query: String!): [CustomerListItem!]!
+  }
+
+  interface Node {
+    id: ID!
+  }
+
   extend type Query {
     customers: [CustomerListItem!]!
     customer(id: ID!): Customer
@@ -49,6 +58,8 @@ export const typeDefs = /* GraphQL */ `
     customerDetails(id: ID!): CustomerDetails
     searchCustomers(query: String!): [CustomerListItem!]!
     firstCustomer: Customer
+    createInvoiceOptions: CreateInvoiceOptions!
+    node(id: ID!): Node
   }
 
   extend type Mutation {
